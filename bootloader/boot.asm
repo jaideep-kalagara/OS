@@ -28,14 +28,14 @@ int 0x13
 jc disk_read_error
 cmp ah, 0
 jne disk_read_error
-
 mov bx, DISK_SUCCESS_MSG
 call print_string
 
-; printing what is in the next sector
-mov al, [STAGE_2_LOC]
-call print_char
+jmp 0x0000:0x7e00
+
 jmp $
+
+
 
 disk_read_error:
     mov bx, DISK_ERROR_MSG
@@ -48,11 +48,8 @@ DISK_SUCCESS_MSG: db "Disk read successful! Continuing with boot...", 0x0A, 0xD,
 
 %include "bootloader/string.asm"
 
+
 ; magic padding
 
 times 510-($-$$) db 0              
 dw 0xaa55
-
-; filling the second sector ( the one that will be readed ) with 'A's
-
-times 512 db 'A'
